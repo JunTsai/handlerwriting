@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /* event bus 即是node中各个模块的基石， 又是前端通信的依赖手段之一；
+      涉及到订阅-发布模式，是非常重要的基础；
+    */
+   class EventEmitter {
+     constructor() {
+      this._events = this._events || new Map(); 
+      this._maxListeners = this._maxListeners || 10;
+     }
+   }
+   EventEmitter.prototype.emit = function(type, ...args) {
+     let handler = this._events.get(type); 
+     if (args.length > 0) {
+       handler.apply(this, args);
+     } else {
+       handler.call(this);
+     }
+     return true;
+   }
+   EventEmitter.prototype.addListener = function(type, fn) {
+     if(!this._events.get(type)) {
+       this._events.set(type, fn);
+     }
+   }
+  </script>
+</body>
+</html>

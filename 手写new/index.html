@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>New</h1>
+  <div>
+    new ：
+    1.运算符创建一个用户定义的对象类型的实例；
+    2.  或具有构造函数的内置对象类型之一
+  </div>
+  <script>
+    // function objectFactory() {
+    //   var obj = new Object(),
+    //   Constructor = [].shift.call(arguments);
+
+    //   obj.__proto__ = Constructor.prototype;
+    //   Constructor.apply(obj, arguments);
+    //   return obj;
+    // }
+    function objectFactory1(fn, ...args) {
+      const proto = Object.create(fn.prototype);
+      const ret = fn.apply(proto, args);
+      return typeof ret === 'object' ? ret : fn;
+    }
+    function objectFactory() {
+      const obj = new Object(); // 新建一个实例
+      let Constuctor = [].shift.call(arguments); // 截取第一个参数
+      obj.__proto__ = Constuctor.prototype; // 将obj的__proto__属性，指向函数的prototype属性
+      let res = Constuctor.apply(obj, arguments); // 更改this，使obj能访问到Constructor的属性
+      return typeof res === 'object' ? res : obj;
+    }
+  </script>
+</body>
+</html>

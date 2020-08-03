@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    Function.prototype.apply = function(context, arry) {
+      var context = context || window;
+      context.fn = this;
+      var result;
+      if (!arry) {
+        result = context.fn()
+      } else {
+        var args = [];
+        for(var i = 0, len = arry.length; i < len; i++) {
+          args.push('arr[' + i + ']');
+        }
+        result = eval('context.fn(' + args + ')');
+      }
+      delete context.fn
+      return result;
+    }
+    // 利用上下文的特性
+    Function.prototype.myApply = function(context = window, ...args) {
+      let func = this;
+      let fn = Symbol("fn");
+      context[fn] = func;
+      let res = context[fn](...args);
+      delete context[fn];
+      return res;
+    }
+  </script>
+</body>
+</html>

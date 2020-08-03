@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="foo" onclick="btn()">点我</button>
+    <script>
+        // 防抖(debounce)
+        // 触发高频事件后, n秒内函数只会执行一次.如果n秒内高频事件再次被触发，则重新计算时间。
+        // 防抖函数代码使用this、arguments，是为了让debounce函数最终返回的函数this指向不变，以及依旧能接受e参数
+       
+        // 非立即执行版：触发函数事件后，函数不会立即执行，而是在n秒后执行，如果n秒内又触发了事件，又重新计算函数执行时间。
+        // function debounce(fn, await) {
+        //     let timer;
+        //     return function() {
+        //         let _this = this;
+        //         let args = arguments;
+        //         if (timer) { clearTimeout(timer) }
+        //         timer = setTimeout(function() {
+        //             fn.apply(_this, args);
+        //         }, await)
+        //     }
+        // }
+        // const debounce = function(fn, await) {
+        //     let  timer = 0;
+        //      return function(...args){
+        //          if (timer) {clearTimeout(timer)};
+        //          timer = setTimeout(() => {
+        //             fn.apply(this, args);
+        //          }, await)
+        //      }
+        // }
+        // 立即执行版本：
+        function debounce(func,wait) {
+            let timeout;
+            return function () {
+                let context = this;
+                let args = arguments;
+
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+
+                let callNow = !timeout;
+                timeout = setTimeout(() => {
+                    timeout = null;
+                }, wait)
+                console.log('timeout:', timeout);
+                if (callNow) {
+                    console.log('callNow:', callNow);
+                    func.apply(context, args)
+                }
+            }
+        }
+        function btn() {
+            debounce(function() {console.log('resize')}, 1000);
+        }
+        console.log( document.getElementById('foo'));
+        document.getElementById('foo').addEventListener('click', debounce(function() {console.log('resize')}, 500));
+       
+        // 合并版本
+        /** 
+         *@desc 函数防抖
+         *@param fn 函数
+         *@param wait 延迟执行毫秒数
+         *@param immediate true 表示立即执行，false表示非立即执行
+         */
+        // function debounce(fn, await, immediate) {
+        //     let timer;
+        //     return function() {
+        //         let ctx = this;
+        //         let args = arguments;
+
+        //         if (timer) clearTimeout(timer);
+
+        //         if (immediate) {
+        //             let callNow = !timer;
+
+        //             timer = setTimeout(()=> {
+        //                 timer = null;
+        //             }, await);
+
+        //             if (callNow) func.apply(ctx, args)
+        //         } else {
+        //             timeout = setTimeout(function(){
+        //                 func.apply(context, args)
+        //             }, wait);
+        //         }
+        //     }
+        // }
+        /**
+         * 防抖的原理：触发高频事件后，n秒内只会执行一次，如果n秒内再次触发，则重新计时。
+         */
+        const debounce = (func, await = 50) => {
+            let timer = 0;
+            return function (...args) {
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(() => {
+                    func.apply(this, args);
+                }, await);
+            }
+        }
+    </script>
+</body>
+</html>

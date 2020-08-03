@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /**
+     *  简单版本
+     *  局限性： 无法实现对函数，RegExp等特殊对象的克隆
+     *  会抛弃对象的constructor， 所有的构造函数会指向Object
+     *  对象有循环引用，会报错
+     * 
+     *  */
+    // const newObj = JSON.parse(JSON.stringify(oldObj));
+
+    function deepCopy(obj) {
+      let result = undefined;
+      if(typeof obj == "object") {
+        result = obj.constructor == 'Array' ? [] : {};
+        for (let i in obj) {
+          result[i] = typeof obj[i] == 'object' ? deepCopy(obj[i]) : obj[i];
+        }
+      } else {
+        result = obj;
+      }
+      return result;
+    }
+    const obj = {
+      a: 1,
+      b: [{
+        c: 2,
+        d: 3,
+      }],
+      c: {
+        a: 3,
+        4: 'hh'
+      },
+    }
+    // const obj2 = deepCopy(obj);
+    // console.log('obj2:', obj2);
+    for (let i in obj) {
+      console.log('key:', i);
+    }
+    /* 
+     简单版本:
+      1.无法实现对函数，RegExp等特殊对象的克隆
+      2.会抛弃对象的constructor， 所有构造函数会指向Object
+      3.对象有循环引用，会报错
+     */
+    // const newObj = JSON.parse(JSON.stringify(obj));
+    
+    function deepCopy(obj) {
+      let result = undefined;
+      if(typeof obj == 'object') {
+        result = obj.constructor === Array ? [] : {};
+        for(let key in obj) {
+          result[key] = typeof obj[key] === 'object' ? deepCopy(obj[key]) : obj[key];
+        }
+      } else {
+        result = obj;
+      }
+      return result;
+    }
+
+  </script>
+</body>
+</html>

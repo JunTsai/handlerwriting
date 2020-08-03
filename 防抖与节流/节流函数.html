@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 节流(throttle): 高频事件触发，但在n秒内只会执行一次，所以节流会稀释函数的执行频率
+        // 时间戳版本
+        function throttle1(fn, await) {
+            let time = 0;
+            return function() {
+                let _this = this;
+                let args = arguments;
+                let now = Date.now();
+
+                if (now - time > await) {
+                    fn.apply(_this, args);
+                    time = now;
+                }
+            }
+        }
+        // 定时器版本
+        function throttle2(fn, wait) {
+            let timer;
+            return function() {
+                let _this = this;
+                let args = arguments;
+
+                if(!timer) {
+                    timer = setTimeout(function() {
+                        timer = null;
+                        fn.apply(_this, args)
+                    }, wait)
+                }
+            }
+        }
+        window.onresize = throttle2(()=>console.log('move'), 1000);
+        /* 
+            节流函数：高频函数触发，只在n秒内执行一次，节流会稀释函数执行频率
+         */
+        const throttle = (func, await = 50) => {
+            // 上一次执行该函数的时间
+            let lastTime = 0;
+            return function(...args) {
+                // 当前时间
+                let now = new Date();
+                // 将当前时间和上一次执行函数时间对比
+                // 如果差值大于设置的等待时间就执行函数
+                if(now - lastTime > await) {
+                    func.apply(this, args);
+                    lastTime = now;
+                }
+            }
+        } 
+    </script>
+</body>
+</html>
